@@ -1,0 +1,25 @@
+GET http://localhost:5000/games
+###
+GET http://localhost:5000/games/1
+###
+POST http://localhost:5000/games
+Content-Type: application/json
+
+{
+    "name": "Street Fighter 8",
+    "genreid": 2,
+    "price": 10.12,
+    "releasedate": "1598-11-19"
+}
+###
+PUT http://localhost:5000/games/7
+Content-Type: application/json
+
+{
+    "name": "Street Fighter Turbo 8",
+    "genreId": 2,
+    "price": 19.99,
+    "releasedate": "1998-11-19"
+}
+###
+DELETE  http://localhost:5000/games/4
