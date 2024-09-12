@@ -3,6 +3,7 @@ using GameStore.Api.Data;
 using GameStore.Api.Dtos;
 using GameStore.Api.Entities;
 using GameStore.Api.GamesMapping;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Api.EndPoints;
@@ -38,7 +39,14 @@ public static class GameEndPoints
             Game game = newGame.toEntity();
             
             await context.Games.AddAsync(game);
-            await context.SaveChangesAsync();
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                return Results.NotFound();
+            }
 
             // convert to Dto to match contract
             return Results.CreatedAtRoute("GetGame", new {Id = game.Id}, game.ToGameDetailsDto());
@@ -57,7 +65,14 @@ public static class GameEndPoints
                       .CurrentValues
                       .SetValues(updateGame.toEntity(id));
 
-            await dbContext.SaveChangesAsync();
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                return Results.NotFound();
+            }
 
             return Results.NoContent();
         });
